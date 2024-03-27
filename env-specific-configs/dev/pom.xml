@@ -4,15 +4,97 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.ozonehis</groupId>
-    <artifactId>ozone-msf</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
-  </parent>
-
   <groupId>com.ozonehis</groupId>
   <artifactId>ozone-msf-dev</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <artifactId>ozone-msf</artifactId>
+      <groupId>com.ozonehis</groupId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>zip</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Unpack Ozone MSF zip -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+          <execution>
+            <id>Unpack Ozone MSF</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <excludeTransitive>true</excludeTransitive>
+              <outputDirectory>${project.build.directory}/ozone-msf</outputDirectory>
+              <includeArtifactIds>ozone-msf</includeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <!-- Copy Ozone MSF files -->
+            <id>Copy Ozone MSF files</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/${project.artifactId}-${project.version}</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/ozone-msf</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+       <!-- packaging the distro as a installable/deployable file -->
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>Package distro artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>
