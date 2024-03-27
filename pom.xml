@@ -11,6 +11,12 @@
   <groupId>com.ozonehis</groupId>
   <artifactId>ozone-msf</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>env-specific-configs/dev</module>
+    <module>env-specific-configs/qa</module>
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +28,31 @@
     <!-- TODO: Add any implementation-specific dependencies -->
   </dependencies>
 
+  <build>
+    <plugins>
+      <!-- packaging the distro as a installable/deployable file -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Package distro artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
   <profiles>
     <profile>
       <id>validator</id>
