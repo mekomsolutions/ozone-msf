@@ -47,6 +47,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -66,8 +67,87 @@
                 <resource>
                   <directory>${project.build.directory}/ozone</directory>
                   <excludes>
-                    <exclude>non-existing-file</exclude>
+                    <exclude>distro/configs/**/addresshierarchy/*.*</exclude>
+                    <exclude>distro/configs/**/attributetypes/*.*</exclude>
+                    <exclude>distro/configs/**/concepts/*.*</exclude>
+                    <exclude>distro/configs/**/drugs*</exclude>
+                    <exclude>distro/configs/**/locations*</exclude>
+                    <exclude>distro/configs/**/ocl*</exclude>
+                    <exclude>distro/configs/**/ampathforms/*.json</exclude>
+                    <exclude>distro/configs/**/ampathformstranslations/*.json</exclude>
                   </excludes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <execution>
+            <!-- Copy MSF Disto docker compose .txt file -->
+            <id>Copy MSF Disto docker compose .txt file</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/${project.artifactId}-${project.version}/run/docker/scripts</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../scripts</directory>
+                  <includes>
+                    <include>
+                      docker-compose-files.txt
+                    </include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+           <execution>
+            <!-- Copy MSF Disto secretes -->
+            <id>Copy MSF Disto secretes</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/${project.artifactId}-${project.version}/run/docker</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/configs/secretes</directory>
+                  <includes>
+                    <include>
+                      .env
+                    </include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <execution>
+            <!-- Copy MSF Disto docker-compose-msf-openmrs.yml file -->
+            <id>Copy MSF Disto docker-compose-msf-openmrs.yml file</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/${project.artifactId}-${project.version}/run/docker</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../scripts</directory>
+                  <includes>
+                    <include>
+                      docker-compose-msf-openmrs.yml
+                    </include>
+                  </includes>
                 </resource>
               </resources>
             </configuration>
